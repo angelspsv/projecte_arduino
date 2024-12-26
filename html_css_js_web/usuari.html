@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espai d'Usuari</title>
+    <link rel="stylesheet" href="usuari.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Col esquerra -->
+        <div class="sidebar">
+            <div class="user-info">
+                <h1 id="user-name">Hola nom_usuari!</h1>
+                <p class="role" id="user-role">Mostrar rol usuari</p>
+            </div>
+            <div class="menu" id="menu">
+                <!-- Botones del menú que se actualizarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Espai principal -->
+        <div class="main-content" id="main-content">
+            <!-- Aquí se mostrará el contenido según el rol -->
+        </div>
+    </div>
+
+    <script>
+        // Obtener el correo electrónico de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
+        if (email) {
+            // Llamar al endpoint de la API para obtener los datos del usuario
+            fetch(`http://localhost:8000/inici_sessio_dades?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.detail) {
+                        // Si hay un error en la respuesta de la API
+                        alert("No s'ha trobat cap usuari amb aquest correu electrònic.");
+                    } else {
+                        // Mostrar los datos del usuario
+                        const userName = data.nom;
+                        const userRole = data.profe;
+                        document.getElementById("user-name").innerText = `Hola ${userName}!`;
+                        document.getElementById("user-role").innerText = `Ets: ${getRoleText(userRole)}`;
+
+                        // Llamar a la función para actualizar el menú según el rol
+                        updateMenu(userRole);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Hi ha hagut un error en carregar les dades de l'usuari.");
+                });
+        } else {
+            alert("No s'ha trobat un correu electrònic.");
+        }
+
+        // Función para obtener el texto del rol
+        function getRoleText(role) {
+            switch (role) {
+                case 0:
+                    return "Alumne";
+                case 1:
+                    return "Professor";
+                case 2:
+                    return "Administrador";
+                default:
+                    return "Desconegut";
+            }
+        }
+
+        // Función para actualizar el menú según el rol
+        function updateMenu(role) {
+            const menu = document.getElementById("menu");
+            menu.innerHTML = ''; // Limpiar el menú existente
+
+            // Crear los botones según el rol
+            const buttons = [];
+
+            if (role === 2) {
+                buttons.push(
+                    '<button onclick="mostrarContenido(\'editar\')">Editar dades personals</button>',
+                    '<button onclick="mostrarContenido(\'depen\')">Administrar permisos usuaris</button>',
+                    '<button onclick="mostrarContenido(\'logout\')">Tancar sessió</button>'
+                );
+            } else if (role === 1) {
+                buttons.push(
+                    '<button onclick="mostrarContenido(\'editar\')">Editar dades personals</button>',
+                    '<button onclick="mostrarContenido(\'depen\')">Gestió de classe</button>',
+                    '<button onclick="mostrarContenido(\'logout\')">Tancar sessió</button>'
+                );
+            } else if (role === 0) {
+                buttons.push(
+                    '<button onclick="mostrarContenido(\'editar\')">Editar dades personals</button>',
+                    '<button onclick="mostrarContenido(\'depen\')">Assistència</button>',
+                    '<button onclick="mostrarContenido(\'logout\')">Tancar sessió</button>'
+                );
+            }
+
+            // Insertar los botones en el menú
+            menu.innerHTML = buttons.join('');
+        }
+
+        // Función para mostrar el contenido dinámicamente
+        function mostrarContenido(opcion) {
+            const content = document.getElementById('main-content');
+            content.innerHTML = ''; // Limpiar contenido
+
+            if (opcion === 'editar') {
+                content.innerHTML = '<h2>Editar dades personals</h2><p>Aquí pots veure i editar les teves dades personals.</p>';
+            } else if (opcion === 'depen') {
+                if (userRole === 2) {
+                    content.innerHTML = '<h2>Administrar permisos</h2><p>Aquesta secció està reservada als administradors.</p>';
+                } else if (userRole === 1) {
+                    content.innerHTML = '<h2>Gestió de classe</h2><p>Aquesta secció permet gestionar la teva classe.</p>';
+                } else if (userRole === 0) {
+                    content.innerHTML = '<h2>Assistència</h2><p>Aquí pots consultar la teva assistència a classe.</p>';
+                }
+            } else if (opcion === 'logout') {
+                content.innerHTML = '<h2>Tancar sessió</h2><p>Has tancat sessió correctament.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
+

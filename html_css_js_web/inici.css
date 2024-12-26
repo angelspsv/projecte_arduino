@@ -1,0 +1,61 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #d3d3d3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor principal */
+.container {
+    text-align: center;
+    padding: 20px;
+    background-color: #d3d3d3;
+    
+}
+
+/* Título */
+h1 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Botones */
+.buttons button {
+    display: block;
+    width: 200px;
+    padding: 10px 20px;
+    margin: 10px auto;
+    font-size: 1rem;
+    color: #070707;
+    background-color: #f7f8f9;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buttons button:hover {
+    background-color: #89898b;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+    .buttons button {
+        width: 150px;
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inici de sessió</title>
+    <link rel="stylesheet" href="inici_sessio.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Inici de sessió</h1>
+        <form class="form">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Contrasenya:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+
+            const email = document.getElementById("email").value;
+
+            try {
+                // Llamar al endpoint de la API
+                const response = await fetch(`http://localhost:8000/inici_sessio?email=${encodeURIComponent(email)}`);
+                const result = await response.json();
+
+                if (result.exists) {
+                    // Redirigir al usuario a la página de usuario
+                    window.location.href = `usuari.html?email=${encodeURIComponent(email)}`;
+                } else {
+                    // Mostrar alerta si el correo no está en la base de datos
+                    alert("E-mail incorrecte o inexistent.");
+                }
+            } catch (error) {
+                console.error("Error al intentar iniciar sesión:", error);
+                alert("Ha ocurrido un error al intentar iniciar sesión.");
+            }
+        });
+    </script>
+</body>
+</html>

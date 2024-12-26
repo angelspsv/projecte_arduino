@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creació de nou usuari</title>
+    <link rel="stylesheet" href="nou_usuari.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Creació de nou usuari</h1>
+        <form action="http://127.0.0.1:8000/nou_usuari/" method="post" class="form">
+
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" required>
+            
+            <label for="cognom">Cognom:</label>
+            <input type="text" id="cognom" name="cognom" required>
+            
+            <label for="mail">E-mail:</label>
+            <input type="email" id="mail" name="mail" required>
+            
+            <label for="dni">DNI:</label>
+            <input type="text" id="dni" name="dni" required>
+            
+            <button type="submit">Crear</button>
+        </form>
+    </div>
+</body>
+</html>
